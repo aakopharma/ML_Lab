@@ -1,0 +1,62 @@
+Practical 5: Logistic Regression
+Aim: Implement Logistic Regression using a CSV dataset and compute the classifier's accuracy.
+
+Dataset: Breast Cancer Wisconsin dataset built into Scikit-learn. It contains 30 numerical features and two target classes: malignant and benign.
+Complete Python program
+
+
+import pandas as pd
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Load the real Breast Cancer dataset
+cancer = load_breast_cancer(as_frame=True)
+
+data = cancer.data.copy()
+data["Class"] = cancer.target
+
+# Save dataset as CSV
+data.to_csv("logistic_regression_data.csv", index=False)
+
+# Read the CSV file
+data = pd.read_csv("logistic_regression_data.csv")
+
+X = data.drop(columns=["Class"])
+y = data["Class"]
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.25,
+    random_state=42,
+    stratify=y
+)
+
+# Create and train the model
+model = make_pipeline(
+    StandardScaler(),
+    LogisticRegression(max_iter=5000, random_state=42)
+)
+
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the classifier
+accuracy = accuracy_score(y_test, predictions)
+
+print("Predictions:", predictions)
+print("Actual Values:", y_test.to_numpy())
+print("Accuracy:", accuracy)
+print("Accuracy Percentage:", round(accuracy * 100, 2), "%")
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, predictions))
+
+
+Result: Logistic Regression was implemented using the Breast Cancer Wisconsin dataset stored in CSV format. The model achieved approximately 98.60% accuracy on the test set.
