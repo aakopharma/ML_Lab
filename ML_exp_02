@@ -1,0 +1,49 @@
+Practical 2: DataFrame Creation and Statistical Summary
+Aim: Create a DataFrame with at least five observations, retrieve a particular column, summarize the DataFrame, and calculate the mean and standard deviation.
+
+Dataset: Iris dataset from Scikit-learn.
+Complete Python program
+
+
+import pandas as pd
+from sklearn.datasets import load_iris
+
+# Load the real Iris dataset
+iris = load_iris(as_frame=True)
+
+# Select the first 10 observations
+df = iris.frame.head(10).copy()
+
+# Add species names
+df["Species"] = df["target"].map(
+    dict(enumerate(iris.target_names))
+)
+
+# Remove the numeric target column
+df.drop(columns=["target"], inplace=True)
+
+# Display the complete DataFrame
+print("DataFrame:")
+print(df.to_string(index=False))
+
+# Retrieve a particular column
+print("\nSepal Length Column:")
+print(df["sepal length (cm)"].to_string(index=False))
+
+# Display summary statistics
+print("\nSummary Statistics:")
+print(df.describe())
+
+# Calculate the mean of numeric columns
+print("\nMean:")
+print(df.mean(numeric_only=True))
+
+# Calculate the standard deviation
+print("\nStandard Deviation:")
+print(df.std(numeric_only=True))
+
+
+
+The ellipses above indicate omitted rows and columns for readability; running the program prints the complete output.
+
+Result: A DataFrame was created from real Iris observations, and column retrieval, summary statistics, mean and standard deviation were demonstrated successfully.
