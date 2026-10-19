@@ -1,0 +1,79 @@
+Practical 9: Decision Tree Based CART Algorithm
+Aim: Demonstrate the working of the CART decision tree algorithm using a real dataset and classify a new sample.
+
+Dataset: Wine recognition dataset from Scikit-learn. The model uses Gini impurity to choose splits.
+Complete Python program
+
+
+
+import pandas as pd
+from sklearn.datasets import load_wine
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Load the real Wine dataset
+wine = load_wine(as_frame=True)
+
+X = wine.data
+y = wine.target
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.30,
+    random_state=42,
+    stratify=y
+)
+
+# Create the CART classifier using Gini impurity
+cart_model = DecisionTreeClassifier(
+    criterion="gini",
+    random_state=42
+)
+
+# Train the model
+cart_model.fit(X_train, y_train)
+
+# Predict test samples
+predictions = cart_model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, predictions)
+
+print("CART Decision Tree Results")
+print("Accuracy:", accuracy)
+print("Accuracy Percentage:", round(accuracy * 100, 2), "%")
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, predictions))
+
+# Display decision rules
+print("\nDecision Tree Rules:")
+print(
+    export_text(
+        cart_model,
+        feature_names=list(X.columns),
+        max_depth=3
+    )
+)
+
+# Create a new sample using median feature values
+new_sample = pd.DataFrame(
+    [X.median().to_dict()]
+)
+
+# Classify the new sample
+prediction = cart_model.predict(new_sample)[0]
+
+print("\nNew Sample:")
+print(new_sample)
+
+print("Predicted Class:", wine.target_names[prediction])
+
+
+
+
+The exact predicted class and confusion matrix are printed when the code runs. The accuracy shown is the measured result for this split.
+
+Result: The CART decision tree classifier was implemented using the Wine dataset with Gini impurity. The trained tree was evaluated on test samples and used to classify a new sample.
