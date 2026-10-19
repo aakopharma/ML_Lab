@@ -1,0 +1,211 @@
+Practical 10: Neural Network for Different Logic Gates
+Aim: Implement a neural network and test its performance on the AND, OR and XOR logic gates.
+
+Dataset: The standard truth tables for two-input logic gates. Unlike the previous experiments, these are mathematical input-output examples rather than a real-world dataset.
+Complete Python program
+
+
+import numpy as np
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+# Input combinations for two-input logic gates
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+# Truth tables for the logic gates
+gates = {
+    "AND": np.array([0, 0, 0, 1]),
+    "OR":  np.array([0, 1, 1, 1]),
+    "XOR": np.array([0, 1, 1, 0])
+}
+
+# Train and test a neural network for each gate
+for gate, y in gates.items():
+
+    model = MLPClassifier(
+        hidden_layer_sizes=(4,),
+        activation="tanh",
+        solver="lbfgs",
+        max_iter=10000,
+        random_state=42,
+        tol=1e-8
+    )
+
+    # Train the neural network
+    model.fit(X, y)
+
+    # Predict outputs
+    predictions = model.predict(X)
+
+    print("\n", gate, "Gate")
+    print("Input | Expected Output | Predicted Output | Status")
+
+    for inputs, expected, predicted in zip(
+        X, y, predictions
+    ):
+        status = (
+            "Correct" if expected == predicted else "Wrong"
+        )
+
+        print(
+            inputs, "|", expected, "|",
+            predicted, "|", status
+        )
+
+    # Calculate accuracy
+    accuracy = accuracy_score(y, predictions)
+
+    print("Accuracy:", accuracy)
+    print("Accuracy Percentage:", accuracy * 100, "%")
+
+The neural network is trained independently for each gate. The program reports the actual predictions and accuracy. Because neural network training is numerical optimization, verify the printed results rather than assuming every run must reproduce all truth-table outputs exactly.
+
+Result: A multilayer perceptron neural network was trained and tested on AND, OR and XOR logic gates. The program displays predicted outputs, expected outputs and accuracy for each gate.
+
+
+
+
+
+
+used datasets : 
+
+1. Datasets used in the experiments
+
+
+
+
+
+
+
+
+
+1. Iris Dataset
+Scikit-learn built-in
+Used in: Experiments 1, 2, 7 and 8.
+
+Contains 150 flower samples from three Iris species: setosa, versicolor and virginica.
+- Features: sepal length, sepal width, petal length and petal width.
+- Target: flower species (3 classes).
+- Purpose: descriptive statistics, DataFrame operations, KNN classification and entropy-based decision trees.
+- Loader: load_iris()
+
+
+
+
+
+
+
+
+
+
+
+
+2. Diabetes Dataset
+Scikit-learn built-in
+Used in: Experiments 3 and 4.
+
+Contains 442 samples with baseline medical measurements and a quantitative measure of disease progression.
+- Features: age, sex, BMI, blood pressure and six blood-serum measurements.
+- Target: quantitative disease-progression measure.
+- Features used in our programs: BMI only.
+- Purpose: linear regression, polynomial regression and MSE evaluation.
+- Loader: load_diabetes()
+
+
+
+
+
+
+
+
+
+
+
+
+3. Breast Cancer Wisconsin Dataset
+Scikit-learn built-in
+Used in: Experiment 5.
+
+Contains 569 samples of breast-mass measurements, with 30 numerical features computed from digitized images of fine-needle aspirates.
+- Features: radius, texture, perimeter, area, smoothness and other cell-nucleus characteristics.
+- Target: malignant or benign (2 classes).
+- Purpose: Logistic Regression and classification accuracy.
+- Loader: load_breast_cancer()
+
+
+
+
+
+
+
+
+
+
+
+
+4. Wine Recognition Dataset
+Scikit-learn built-in
+Used in: Experiments 6 and 9.
+
+Contains 178 wine samples described by chemical measurements and grouped into three wine cultivars.
+- Features: alcohol, malic acid, ash, magnesium, flavanoids, color intensity and other chemical properties.
+- Target: one of 3 wine classes.
+- Purpose: Gaussian Naive Bayes and CART decision tree classification.
+- Loader: load_wine()
+
+
+
+
+
+
+
+
+
+
+
+
+5. Logic-Gate Truth Tables
+Mathematical examples
+Used in: Experiment 10.
+
+These are not a built-in Scikit-learn dataset. They contain all four possible combinations of two binary inputs.
+- Features: two inputs, each either 0 or 1.
+- Targets: AND, OR and XOR outputs.
+- Purpose: train and test a neural network on logical relationships.
+
+
+
+2. Experiment-to-dataset mapping
+Experiment	Topic	Dataset	Samples in source dataset
+1	Mean, median, standard deviation and mode	Iris	150
+2	DataFrame and descriptive statistics	Iris	150; first 10 used
+3	Linear Regression	Diabetes	442
+4	Polynomial Regression	Diabetes	442
+5	Logistic Regression	Breast Cancer Wisconsin	569
+6	Naive Bayes	Wine Recognition	178
+7	K-Nearest Neighbors	Iris	150
+8	Entropy-based decision tree	Iris	150
+9	CART decision tree	Wine Recognition	178
+10	Neural network for logic gates	AND, OR, XOR truth tables	4 input combinations per gate
+The sample counts in the table refer to the original datasets. Some experiments use a train/test split, and Practical 2 uses only the first 10 Iris observations.
+3. How to load each real dataset
+All four real datasets can be loaded directly in Google Colab or Jupyter Notebook without downloading separate CSV files.
+from sklearn.datasets import (    load_iris,    load_diabetes,    load_breast_cancer,    load_wine)# 1. Iris datasetiris = load_iris()print("Iris:", iris.data.shape, iris.target.shape)# 2. Diabetes datasetdiabetes = load_diabetes()print("Diabetes:", diabetes.data.shape, diabetes.target.shape)# 3. Breast Cancer Wisconsin datasetcancer = load_breast_cancer()print("Breast Cancer:", cancer.data.shape, cancer.target.shape)# 4. Wine Recognition datasetwine = load_wine()print("Wine:", wine.data.shape, wine.target.shape)
+
+
+
+Expected output:
+Iris: (150, 4) (150,)
+Diabetes: (442, 10) (442,)
+Breast Cancer: (569, 30) (569,)
+Wine: (178, 13) (178,)
+
+
+Final recommendation: For your lab viva, focus especially on the Iris, Diabetes, Breast Cancer and Wine datasets—their number of samples, features, target variables, and why each dataset is suitable for its corresponding experiment.
+
+
