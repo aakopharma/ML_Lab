@@ -1,0 +1,73 @@
+Practical 7: k-Nearest Neighbor Algorithm on the Iris Dataset
+Aim: Implement the k-Nearest Neighbor algorithm to classify the Iris dataset and print both correct and wrong predictions.
+
+Dataset: The built-in Iris dataset, containing 150 observations, four numerical features, and three flower species.
+Complete Python program
+
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.30,
+    random_state=42,
+    stratify=y
+)
+
+# Create the KNN classifier with k = 3
+model = make_pipeline(
+    StandardScaler(),
+    KNeighborsClassifier(n_neighbors=3)
+)
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Predict test samples
+predictions = model.predict(X_test)
+
+correct = 0
+wrong = 0
+
+print("KNN Classification Results\n")
+
+for actual, predicted in zip(y_test, predictions):
+    status = "Correct" if actual == predicted else "Wrong"
+
+    print(
+        "Actual:", iris.target_names[actual],
+        "| Predicted:", iris.target_names[predicted],
+        "|", status
+    )
+
+    if actual == predicted:
+        correct += 1
+    else:
+        wrong += 1
+
+# Display evaluation results
+print("\nTotal Test Samples:", len(y_test))
+print("Correct Predictions:", correct)
+print("Wrong Predictions:", wrong)
+print("Accuracy:", accuracy_score(y_test, predictions))
+print(
+    "Accuracy Percentage:",
+    round(accuracy_score(y_test, predictions) * 100, 2),
+    "%"
+)
+
+
+The complete program prints all 45 predictions and calculates the exact counts and accuracy. The displayed sample lines illustrate the format, not a claim that every prediction will be correct.
+
+Result: The KNN classifier was implemented on the Iris dataset using three nearest neighbours. Both correct and incorrect predictions were displayed.
